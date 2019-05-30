@@ -11,7 +11,17 @@ import Container from 'react-bootstrap/Container';
 
 class App extends Component {
   state = {
-    displayedContacts: contacts.slice(0,5)
+    displayedContacts: contacts.slice(0,5),
+    title: "N'importe quoi",
+    selectedOption: '1',
+    selectedOption2: [],
+    optionList: [
+    {value: 1, selected: true},
+    {value: 2, selected: false},
+    {value: 3, selected: false},
+    {value: 4, selected: false},
+    {value: 5, selected: false},
+    ]
   }
 
   addRandomContact() {
@@ -38,6 +48,28 @@ class App extends Component {
 
   }
 
+  handleTitle(e) {
+    console.log(this.state.title)
+    this.setState({title: e.target.value})
+  }
+
+  handleSelect(e) {
+    let selected = []
+    for (let i =0; i< e.target.children.length; i++) {
+      let option = e.target.children[i]
+      if (option.selected)
+        selected.push(option.value)
+    }
+    this.setState({selectedOption2: selected})
+    console.log(this.state.selectedOption2)
+  }
+
+  handleChange(e) {
+    let {name, value} = e.target
+    console.log(this.state.selectedOption)
+    this.setState({[name]: value})
+  }
+
   render() {
 
     return (
@@ -50,6 +82,23 @@ class App extends Component {
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
         <Container>
+          <form>
+          <input value={this.state.title} onChange={e => this.handleTitle(e)}/>
+          <select 
+            name="selectedOption" 
+            value={this.state.selectedOption} 
+            onChange={this.handleChange.bind(this)}
+            >
+            <option>{this.state.selectedOption}</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+          </select>
+          <select onChange={this.handleSelect.bind(this)} multiple>
+          {this.state.optionList.map(o=>(<option value={o.value}>{o.value}</option>))}
+          </select>
+          </form>
           <Button onClick={this.addRandomContact.bind(this)}>Add Random Contacts</Button>
           <Button onClick={this.sortByName.bind(this)}>Sort By Name</Button>
           <Button onClick={this.sortByPopularity.bind(this)}>Sort By Popularity</Button>
